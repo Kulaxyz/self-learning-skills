@@ -1,0 +1,56 @@
+---
+description: Self-learning — recognize a hard-won "golden path" during a task and persist it as a reusable Cursor rule so the next session already knows it. Applies whenever a task succeeds only after several tries, uses non-obvious tooling or commands, reveals project facts (how to reach the DB, where creds/env vars live, how to deploy, run migrations, or verify a change live), or the user says "remember this".
+alwaysApply: true
+---
+
+# Self-learning
+
+Make yourself self-improving: when you earn a reusable **golden path**, capture
+it so the next session starts knowing it instead of rediscovering it.
+
+## Recognize the moment
+
+- A task only worked after several attempts, wrong turns, or a correction.
+- You found project facts you didn't know up front: where creds/env vars live,
+  a non-obvious command, a required sequence, a gotcha that defies the obvious.
+- An operational workflow likely to recur — reach the dev/prod DB, deploy, run
+  migrations, seed data, verify a change live.
+- The user says "remember this" / "don't make me re-explain this next time".
+
+Act on the cue immediately — **don't ask permission first**. Then tell the user
+what you saved and where.
+
+## Capture it as a rule
+
+Write a new rule at `.cursor/rules/learned/<short-name>.mdc`:
+
+```mdc
+---
+description: <what it does AND when to use it — this is how Cursor reloads it later>
+# or, if path-specific instead of description-triggered:
+# globs: ["path/glob/**"]
+---
+
+# <title>
+
+**Goal:** <the recurring task this serves>
+
+## Steps
+1. <exact command / path; keep the required order if it matters>
+
+## Gotchas
+- <non-obvious fact; where a secret lives — never the value>
+
+## What didn't work
+- <approach you ruled out, and why>
+```
+
+Capture the **procedure** (commands, paths, order, gotchas), not a one-off
+answer, plus the **failures** so next time skips the dead-ends.
+
+## Rules
+
+- **Never write secret values** (tokens, passwords, connection strings, keys).
+  Record only *where* they live (env var name, config file, secret manager).
+- A **one-line fact** → put it in project notes/memory, not a whole rule.
+- A genuine **one-off** → skip it.
