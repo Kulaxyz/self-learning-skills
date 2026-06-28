@@ -39,43 +39,50 @@ auto-loaded:
 
 ## Install
 
-### Claude Code
+### `npx` — recommended (works with 70+ agents)
 
-Plugin (recommended):
+Uses the community [`skills`](https://github.com/vercel-labs/skills) CLI, which
+installs into whatever agents it detects — Claude Code, Cursor, Codex, Cline,
+OpenCode, and more:
+
+```bash
+npx skills add kulaxyz/self-learning-skills                 # this project (auto-detects agents)
+npx skills add kulaxyz/self-learning-skills -g              # global — all your projects
+npx skills add kulaxyz/self-learning-skills -a claude-code  # a specific agent
+```
+
+Try it once without installing:
+
+```bash
+npx skills use kulaxyz/self-learning-skills --skill self-learning | claude
+```
+
+### Claude Code plugin
 
 ```
 /plugin marketplace add kulaxyz/self-learning-skills
 /plugin install self-learning@self-learning-skills
 ```
 
-Or copy the skill manually:
+### Manual
+
+<details>
+<summary>Copy the files into place yourself</summary>
 
 ```bash
 git clone https://github.com/kulaxyz/self-learning-skills
-cp -R self-learning-skills/skills/self-learning ~/.claude/skills/      # global
-# or into a single project's .claude/skills/ to share via git
-```
 
-### Cursor
+# Claude Code — global (or into a project's .claude/skills/ to share via git)
+cp -R self-learning-skills/skills/self-learning ~/.claude/skills/
 
-Copy the rule into your project (Cursor auto-loads `.cursor/rules/`):
-
-```bash
-git clone https://github.com/kulaxyz/self-learning-skills
+# Cursor — auto-loads .cursor/rules/ (harvested rules land in .cursor/rules/learned/)
 mkdir -p .cursor/rules
 cp self-learning-skills/.cursor/rules/self-learning.mdc .cursor/rules/
-```
 
-Harvested rules will be written to `.cursor/rules/learned/`.
-
-### Other agents (AGENTS.md)
-
-For Codex, Zed, Aider, Gemini CLI, or anything that reads a standing
-instructions file, append [`AGENTS.md`](AGENTS.md) to your project's `AGENTS.md`:
-
-```bash
+# Any AGENTS.md agent (Codex, Zed, Aider, Gemini CLI, …)
 curl https://raw.githubusercontent.com/kulaxyz/self-learning-skills/main/AGENTS.md >> AGENTS.md
 ```
+</details>
 
 ## Triage: skill, memory, or skip?
 
@@ -100,6 +107,7 @@ file leaks it.
 ```
 self-learning-skills/
 ├── AGENTS.md                          # generic, cross-tool version of the loop
+├── skills.sh.json                     # registry manifest for `npx skills` / skills.sh
 ├── .claude-plugin/
 │   └── marketplace.json               # Claude Code plugin manifest
 ├── skills/

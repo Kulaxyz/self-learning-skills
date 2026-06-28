@@ -1,0 +1,11 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Self-learning",
+      "description": "A self-improving meta-skill: recognize a hard-won golden path in a session and harvest it into a reusable skill for next time.",
+      "skills": ["self-learning"]
+    }
+  ]
+}
