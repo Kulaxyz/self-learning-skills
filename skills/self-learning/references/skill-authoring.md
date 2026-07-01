@@ -126,6 +126,9 @@ pasting a value, replace it with its source.
 
 ## Self-validation checklist (run before finishing)
 
+- [ ] **Promotion rule met**: the skill records a passing check that verified the
+      path, names the failure pattern it addresses, and lists ≥1 ruled-out
+      dead-end. If any is missing, this shouldn't be a skill — stop and report it.
 - [ ] `SKILL.md` exists at the skill root.
 - [ ] `name` matches the directory name and the regex (lowercase, hyphen rules).
 - [ ] `description` is non-empty, ≤1024 chars, and states what + when.

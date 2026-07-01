@@ -65,23 +65,44 @@ When you do harvest, capture the **failures too**, not just the win: the
 approaches you ruled out and *why* often save more time next session than the
 golden path itself.
 
+### Promotion rule: don't enshrine guesses
+
+A skill is authoritative — the next session trusts it without re-deriving it —
+so hold promotion to a high bar. Only write a skill when **all three** hold:
+
+1. **A passing check.** The path was actually verified — a test passed, the
+   command exited clean, the repro reproduced, the build went green. Record what
+   the check was. "Seemed to work" is not a passing check.
+2. **A named failure pattern.** You can name the failure this path avoids or
+   diagnoses (e.g. "stale build cache → phantom type errors"), not a vague
+   "sometimes it breaks".
+3. **At least one ruled-out dead-end.** A concrete approach you tried and
+   eliminated, with the reason.
+
+If any is missing, it isn't a skill yet — leave a tentative note in memory
+(marked unverified) or skip it. This keeps confident guesses out of the skill
+set.
+
 ## Harvest procedure
 
-- [ ] 1. **Choose scope and name yourself** using the heuristics below — don't
+- [ ] 1. **Apply the promotion rule** (above). Passing check + named failure
+      pattern + one ruled-out dead-end — or it isn't a skill: note it in memory
+      or skip. Don't proceed on a confident guess.
+- [ ] 2. **Choose scope and name yourself** using the heuristics below — don't
       stop to ask. Default to project scope; pick a clear, specific `name`.
-- [ ] 2. **Dedupe.** Look for an existing skill to UPDATE rather than duplicate:
+- [ ] 3. **Dedupe.** Look for an existing skill to UPDATE rather than duplicate:
       `ls ~/.claude/skills` and `ls "$(git rev-parse --show-toplevel)/.claude/skills"`.
       Also glance at any `MEMORY.md` index — a fact already recorded there may
       just need a pointer, not a new skill.
-- [ ] 3. **Distill the golden path from THIS conversation** before delegating —
+- [ ] 4. **Distill the golden path from THIS conversation** before delegating —
       while it's fresh in your head: the exact working commands, file paths, env
       var names, the required order, and (just as important) the dead-ends to
       avoid. You'll hand this to the fork as raw material.
-- [ ] 4. **Delegate the write** to a sub-agent that inherits this conversation
+- [ ] 5. **Delegate the write** to a sub-agent that inherits this conversation
       (a fork, in Claude Code), or do it inline if your client has no such
       mechanism — see below. The conversation is the only place the golden path
       lives, so whoever writes it must have that context.
-- [ ] 5. When the fork reports back, **relay the new skill's path** to the user
+- [ ] 6. When the fork reports back, **relay the new skill's path** to the user
       and, in one line, what it captured.
 
 ### Scope: project vs global
@@ -123,6 +144,11 @@ it a prompt shaped like this (fill in the bracketed parts):
 >   one-off answer. Generalize so it works next time.
 > - Capture the FAILURES too: the approaches we ruled out and why, so the next
 >   session skips the dead-ends. Put them in a "What didn't work" section.
+> - Enforce the promotion rule: the skill must record the passing check that
+>   verified this path, name the failure pattern it addresses, and list at least
+>   one ruled-out dead-end. If any is missing (e.g. nothing was actually
+>   verified), STOP and report it isn't promotable — leave a tentative memory
+>   note instead of writing the skill.
 > - NEVER write secret VALUES (passwords, tokens, connection strings, API keys).
 >   Record only WHERE to find them: the env var name, the selector function, the
 >   MCP tool, the secret manager. Reproducing a secret into a skill file leaks it.

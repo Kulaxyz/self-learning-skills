@@ -48,6 +48,17 @@ description: <what it does AND when to use it — this is how Cursor reloads it 
 Capture the **procedure** (commands, paths, order, gotchas), not a one-off
 answer, plus the **failures** so next time skips the dead-ends.
 
+## Promotion rule
+
+Only write a rule when **all three** hold, so guesses don't get enshrined:
+
+1. **A passing check** — the path was actually verified (test passed, clean exit,
+   green build, reproduced repro). "Seemed to work" doesn't count.
+2. **A named failure pattern** — you can name the failure it avoids or diagnoses.
+3. **At least one ruled-out dead-end** — an approach you tried and eliminated.
+
+If any is missing, leave a tentative note in project memory instead, or skip it.
+
 ## Rules
 
 - **Never write secret values** (tokens, passwords, connection strings, keys).

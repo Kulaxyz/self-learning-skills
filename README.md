@@ -94,6 +94,21 @@ It won't bloat your config with one-liners. Each lesson is routed:
 | A single **fact or one-line correction** | lightweight notes/memory (e.g. a `MEMORY.md`) |
 | A genuine **one-off** | skipped |
 
+## Promotion rule (don't enshrine guesses)
+
+Triage decides *granularity*; the promotion rule decides *confidence*. A skill is
+authoritative — the next session trusts it without re-deriving it — so a session
+is only promoted to a skill when **all three** hold:
+
+1. **A passing check** — the path was actually verified (a test passed, a clean
+   exit, a green build, a reproduced repro). "Seemed to work" doesn't count.
+2. **A named failure pattern** — the failure it avoids or diagnoses, named.
+3. **At least one ruled-out dead-end** — a concrete approach tried and eliminated.
+
+Miss any one and it stays a tentative memory note (or is skipped) rather than a
+skill. This keeps confident-but-unverified guesses out of the skill set.
+_(Promotion rule suggested by community feedback.)_
+
 ## Safety
 
 Harvested skills/rules get committed and shared, so this is built to **never

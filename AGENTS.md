@@ -38,6 +38,22 @@ so next time skips the dead-ends.
 description, or because this file is always read) and you start from the golden
 path.
 
+## Promotion rule
+
+A saved entry is authoritative — future sessions trust it without re-deriving it.
+Only promote a session to a durable entry when **all three** hold:
+
+1. **A passing check** — the path was actually verified (a test passed, the
+   command exited clean, the repro reproduced, the build went green). Record it.
+   "Seemed to work" doesn't count.
+2. **A named failure pattern** — you can name the failure it avoids or diagnoses,
+   not a vague "sometimes it breaks".
+3. **At least one ruled-out dead-end** — a concrete approach you tried and
+   eliminated, with the reason.
+
+If any is missing, it isn't durable yet — leave a tentative note (marked
+unverified) or skip it. This keeps confident guesses out.
+
 ## Rules
 
 - **Never write secret values** — no tokens, passwords, connection strings, or

@@ -15,6 +15,11 @@ metadata:
 
 One or two sentences: what this captures and the situation it's for.
 
+<!-- Promotion rule: fill BOTH lines. If you can't, this shouldn't be a skill. -->
+**Failure pattern:** REPLACE — the failure this path avoids or diagnoses.
+**Verified by:** REPLACE — the passing check that confirmed it (test passed, clean
+exit, green build, reproduced repro). Not "seemed to work".
+
 ## When to use this
 
 - REPLACE: the concrete trigger(s) — the recurring task or situation this serves.
@@ -45,8 +50,8 @@ REPLACE — a short, real input → command → expected output, if it helps.
 
 ## What didn't work
 
-<!-- Optional but high-value: the approaches you ruled out and WHY, so the next
-     session skips the dead-ends instead of re-discovering them. Delete if none. -->
+<!-- Required by the promotion rule: list at least one approach you ruled out and
+     WHY, so the next session skips the dead-end instead of re-discovering it. -->
 
 - REPLACE — approach that looked right but failed, and the reason.
 
