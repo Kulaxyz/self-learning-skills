@@ -11,9 +11,9 @@ description: >
   re-explain this next time", or otherwise wants a workflow preserved across
   sessions. Proactively recognize the moment even when unprompted: if a task took
   several attempts before it worked, used non-obvious tooling, or is likely to
-  recur, harvest it without asking first. Delegates to a sub-agent when your tool
-  has one (a fork in Claude Code), or works inline, to extract the proven
-  procedure into a new project-local or global skill.
+  recur, harvest it without asking first. Delegates to a subagent when your tool
+  supports one, or works inline, to extract the proven procedure into a new
+  project-local or global skill.
 license: MIT
 metadata:
   author: kulaxyz
@@ -27,9 +27,10 @@ Agent Skill, so the next session — yours or a teammate's — starts already
 knowing the proven route instead of rediscovering it from scratch.
 
 It is a *meta-skill*: it doesn't do the work, it captures **how** work got done.
-It's tool-neutral — it works with any agent that supports the Agent Skills
-format (Claude Code, Cursor, Codex, and others). Where a step differs by tool,
-the neutral version comes first and the tool-specific bit is called out.
+It's tool-neutral — it works with any agent that reads the Agent Skills format
+(e.g. Claude Code and Codex, which both load `SKILL.md` skills natively). Where a
+step differs by tool, the generic version comes first and any tool-specific
+detail is only an example.
 
 ## Recognize the moment
 
@@ -96,50 +97,51 @@ set.
       stop to ask. Default to project scope; pick a clear, specific `name`.
 - [ ] 3. **Dedupe.** Look for an existing skill to UPDATE rather than duplicate.
       List your agent's skills directories — the project one and the user-level
-      one (Claude Code: `.claude/skills` and `~/.claude/skills`; the `skills`
-      CLI: `.agents/skills`; or your tool's equivalent). Also glance at any
-      memory/notes index — a fact already recorded may just need a pointer.
+      one (e.g. Claude Code `.claude/skills` + `~/.claude/skills`, Codex
+      `.codex/skills` + `~/.codex/skills`, or your tool's equivalent). Also
+      glance at any memory/notes index — a fact already there may just need a
+      pointer.
 - [ ] 4. **Distill the golden path from THIS conversation** before delegating —
       while it's fresh in your head: the exact working commands, file paths, env
       var names, the required order, and (just as important) the dead-ends to
       avoid. This is the raw material for the write.
-- [ ] 5. **Delegate the write** to a sub-agent that inherits this conversation
-      (a fork, in Claude Code), or do it inline if your tool has no such
-      mechanism — see below. The conversation is the only place the golden path
-      lives, so whoever writes it must have that context.
+- [ ] 5. **Delegate the write** to a subagent that inherits this conversation if
+      your tool supports one, or do it inline otherwise — see below. The
+      conversation is the only place the golden path lives, so whoever writes it
+      must have that context.
 - [ ] 6. When the write is done, **relay the new skill's path** to the user
       and, in one line, what it captured.
 
 ### Scope: project vs global
 
 - **Project** (the repo's skills directory — e.g. `.claude/skills/`,
-  `.agents/skills/`): the path is specific to THIS codebase — its env vars, its
+  `.codex/skills/`): the path is specific to THIS codebase — its env vars, its
   build/release steps, its schema, its quirks. Most harvested operational skills
   are project-scoped, and they ship to the team via git.
-- **Global** (your user-level skills directory — e.g. `~/.claude/skills/`): the
-  path generalizes across projects — a personal tool, a cross-repo habit, or a
-  workflow tied to your machine rather than to one repository.
+- **Global** (your user-level skills directory — e.g. `~/.claude/skills/`,
+  `~/.codex/skills/`): the path generalizes across projects — a personal tool, a
+  cross-repo habit, or a workflow tied to your machine rather than to one repo.
 
 When unsure, prefer **project** — an over-shared global skill triggers in repos
 where its commands don't apply.
 
-## Delegate the write (sub-agent, or inline)
+## Delegate the write (subagent, or inline)
 
-The writer needs THIS conversation's context — it's the only place the golden
-path lives. Two equally valid ways to run it:
+Whoever writes the skill needs THIS conversation's context — it's the only place
+the golden path lives. Two equally valid ways to run it:
 
-- **Inline** — do the steps yourself in the main loop. This is the default for
-  Codex, Cursor, and any tool without a context-inheriting sub-agent.
-- **Sub-agent** — if your tool can spawn one that **inherits the conversation**,
-  use it to keep the harvesting work out of your main context. In Claude Code
-  that's a **fork** (`subagent_type: "fork"`) — *not* a fresh agent, which would
+- **Inline** — do the steps yourself in the main loop. Always works.
+- **Subagent** — if your tool can delegate to a subagent that **inherits this
+  conversation**, use it to keep the harvesting work out of your main context.
+  (Claude Code: a skill with `context: fork`. Codex and others spawn subagents
+  their own way.) Don't hand it to a *fresh* agent with no context — it would
   start blank with nothing to extract.
 
-Either way the writer over-reaches by default, so box it in tightly. Follow this
-brief (fill in the bracketed parts) — hand it to the sub-agent, or work through
-it yourself inline:
+Either way it over-reaches by default, so box it in tightly. Follow this brief
+(fill in the bracketed parts) — hand it to the subagent, or work through it
+yourself inline:
 
-> You are a skill-harvesting writer. Your ONLY job is to write a new Agent Skill
+> You are harvesting a skill. Your ONLY job is to write a new Agent Skill
 > capturing the golden path we just worked out in this conversation:
 > **[one-line description of the workflow]**.
 >
@@ -173,9 +175,9 @@ it yourself inline:
 - **`name` must equal the directory name**, and be lowercase `a-z`/`0-9`/hyphens
   only — no leading, trailing, or doubled hyphens. A mismatch means the skill
   won't load.
-- **The writer over-reaches by default** (a sub-agent especially). That's why
-  the brief above forbids touching project source or resuming the task — keep it
-  boxed to the skills directory.
+- **Whoever writes the skill over-reaches by default** (a subagent especially).
+  That's why the brief above forbids touching project source or resuming the
+  task — keep it boxed to the skills directory.
 - **Don't duplicate.** If a near-identical skill (or memory) already exists,
   update it instead of spawning a second one that competes to trigger.
 - **Capture procedures, not answers.** "Join orders to customers for EMEA" is
@@ -184,6 +186,6 @@ it yourself inline:
 - **Keep `SKILL.md` tight** (< 500 lines, < ~5000 tokens). Push detail into
   `references/` and tell the reader *when* to load each file.
 
-For the full authoring spec the writer follows, see
+For the full authoring spec, see
 [references/skill-authoring.md](references/skill-authoring.md). The fill-in
 template is [assets/SKILL.template.md](assets/SKILL.template.md).

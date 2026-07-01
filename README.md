@@ -33,9 +33,9 @@ auto-loaded:
 
 | Tool | Persists golden paths to | Auto-loads via |
 |---|---|---|
-| Claude Code / Agent Skills clients | a new `skills/<name>/SKILL.md` | skill description matching |
+| Claude Code, Codex, Agent Skills clients | a new `skills/<name>/SKILL.md` | skill description matching |
 | Cursor | a new `.cursor/rules/learned/<name>.mdc` | rule description / globs |
-| Codex, Zed, Aider, … | `AGENTS.md` (or project notes/memory) | always-read instructions |
+| Zed, Aider, Gemini CLI, … | `AGENTS.md` (or project notes/memory) | always-read instructions |
 
 ## Install
 

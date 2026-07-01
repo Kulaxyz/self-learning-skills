@@ -1,4 +1,4 @@
-# Skill authoring spec (for the harvesting writer)
+# Skill authoring spec
 
 Read this before writing a harvested skill. It is a condensed version of the
 Agent Skills specification and best-practices, focused on what you need to
