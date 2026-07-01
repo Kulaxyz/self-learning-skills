@@ -11,8 +11,9 @@ description: >
   re-explain this next time", or otherwise wants a workflow preserved across
   sessions. Proactively recognize the moment even when unprompted: if a task took
   several attempts before it worked, used non-obvious tooling, or is likely to
-  recur, harvest it without asking first. Spawns a fork agent that extracts the
-  proven procedure into a new project-local or global SKILL.md.
+  recur, harvest it without asking first. Delegates to a sub-agent when your tool
+  has one (a fork in Claude Code), or works inline, to extract the proven
+  procedure into a new project-local or global skill.
 license: MIT
 metadata:
   author: kulaxyz
@@ -26,6 +27,9 @@ Agent Skill, so the next session — yours or a teammate's — starts already
 knowing the proven route instead of rediscovering it from scratch.
 
 It is a *meta-skill*: it doesn't do the work, it captures **how** work got done.
+It's tool-neutral — it works with any agent that supports the Agent Skills
+format (Claude Code, Cursor, Codex, and others). Where a step differs by tool,
+the neutral version comes first and the tool-specific bit is called out.
 
 ## Recognize the moment
 
@@ -90,47 +94,52 @@ set.
       or skip. Don't proceed on a confident guess.
 - [ ] 2. **Choose scope and name yourself** using the heuristics below — don't
       stop to ask. Default to project scope; pick a clear, specific `name`.
-- [ ] 3. **Dedupe.** Look for an existing skill to UPDATE rather than duplicate:
-      `ls ~/.claude/skills` and `ls "$(git rev-parse --show-toplevel)/.claude/skills"`.
-      Also glance at any `MEMORY.md` index — a fact already recorded there may
-      just need a pointer, not a new skill.
+- [ ] 3. **Dedupe.** Look for an existing skill to UPDATE rather than duplicate.
+      List your agent's skills directories — the project one and the user-level
+      one (Claude Code: `.claude/skills` and `~/.claude/skills`; the `skills`
+      CLI: `.agents/skills`; or your tool's equivalent). Also glance at any
+      memory/notes index — a fact already recorded may just need a pointer.
 - [ ] 4. **Distill the golden path from THIS conversation** before delegating —
       while it's fresh in your head: the exact working commands, file paths, env
       var names, the required order, and (just as important) the dead-ends to
-      avoid. You'll hand this to the fork as raw material.
+      avoid. This is the raw material for the write.
 - [ ] 5. **Delegate the write** to a sub-agent that inherits this conversation
-      (a fork, in Claude Code), or do it inline if your client has no such
+      (a fork, in Claude Code), or do it inline if your tool has no such
       mechanism — see below. The conversation is the only place the golden path
       lives, so whoever writes it must have that context.
-- [ ] 6. When the fork reports back, **relay the new skill's path** to the user
+- [ ] 6. When the write is done, **relay the new skill's path** to the user
       and, in one line, what it captured.
 
 ### Scope: project vs global
 
-- **Project** (`<repo>/.claude/skills/`): the path is specific to THIS codebase
-  — its env vars, its deploy command, its schema, its quirks. Most harvested
-  operational skills are project-scoped, and they ship to the team via git.
-- **Global** (`~/.claude/skills/`): the path generalizes across projects — a
-  personal tool, a cross-repo habit, or a workflow tied to your machine rather
-  than to one repository.
+- **Project** (the repo's skills directory — e.g. `.claude/skills/`,
+  `.agents/skills/`): the path is specific to THIS codebase — its env vars, its
+  build/release steps, its schema, its quirks. Most harvested operational skills
+  are project-scoped, and they ship to the team via git.
+- **Global** (your user-level skills directory — e.g. `~/.claude/skills/`): the
+  path generalizes across projects — a personal tool, a cross-repo habit, or a
+  workflow tied to your machine rather than to one repository.
 
 When unsure, prefer **project** — an over-shared global skill triggers in repos
 where its commands don't apply.
 
-## Delegate the write (fork, or inline)
+## Delegate the write (sub-agent, or inline)
 
-If your client can spawn a sub-agent that **inherits the current conversation**
-(in Claude Code: a fork), use it — it keeps the harvesting work out of your main
-context while still seeing the golden path. If it can't, run the same steps
-**inline** in the main loop. The rules below are identical either way.
+The writer needs THIS conversation's context — it's the only place the golden
+path lives. Two equally valid ways to run it:
 
-In Claude Code, use a **fork** (`subagent_type: "fork"`), *not* a fresh
-`general-purpose` agent. The golden path only exists in this conversation's
-context, and a fork inherits that context; a fresh agent would start blank and
-have nothing to extract. Forks over-reach by default, so box it in tightly. Hand
-it a prompt shaped like this (fill in the bracketed parts):
+- **Inline** — do the steps yourself in the main loop. This is the default for
+  Codex, Cursor, and any tool without a context-inheriting sub-agent.
+- **Sub-agent** — if your tool can spawn one that **inherits the conversation**,
+  use it to keep the harvesting work out of your main context. In Claude Code
+  that's a **fork** (`subagent_type: "fork"`) — *not* a fresh agent, which would
+  start blank with nothing to extract.
 
-> You are a skill-harvesting fork. Your ONLY job is to write a new Agent Skill
+Either way the writer over-reaches by default, so box it in tightly. Follow this
+brief (fill in the bracketed parts) — hand it to the sub-agent, or work through
+it yourself inline:
+
+> You are a skill-harvesting writer. Your ONLY job is to write a new Agent Skill
 > capturing the golden path we just worked out in this conversation:
 > **[one-line description of the workflow]**.
 >
@@ -164,9 +173,9 @@ it a prompt shaped like this (fill in the bracketed parts):
 - **`name` must equal the directory name**, and be lowercase `a-z`/`0-9`/hyphens
   only — no leading, trailing, or doubled hyphens. A mismatch means the skill
   won't load.
-- **Forks over-reach by default.** That's exactly why the prompt above forbids
-  touching project source or resuming the task — keep the fork boxed to the
-  skills directory.
+- **The writer over-reaches by default** (a sub-agent especially). That's why
+  the brief above forbids touching project source or resuming the task — keep it
+  boxed to the skills directory.
 - **Don't duplicate.** If a near-identical skill (or memory) already exists,
   update it instead of spawning a second one that competes to trigger.
 - **Capture procedures, not answers.** "Join orders to customers for EMEA" is
@@ -175,6 +184,6 @@ it a prompt shaped like this (fill in the bracketed parts):
 - **Keep `SKILL.md` tight** (< 500 lines, < ~5000 tokens). Push detail into
   `references/` and tell the reader *when* to load each file.
 
-For the full authoring spec the fork follows, see
+For the full authoring spec the writer follows, see
 [references/skill-authoring.md](references/skill-authoring.md). The fill-in
 template is [assets/SKILL.template.md](assets/SKILL.template.md).

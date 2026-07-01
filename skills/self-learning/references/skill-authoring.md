@@ -1,4 +1,4 @@
-# Skill authoring spec (for the harvesting fork)
+# Skill authoring spec (for the harvesting writer)
 
 Read this before writing a harvested skill. It is a condensed version of the
 Agent Skills specification and best-practices, focused on what you need to
@@ -67,7 +67,7 @@ description: >
 No required format, but favor this shape:
 
 1. One or two lines on what the skill is for.
-2. **Procedure** — numbered/checklist steps, with a clear default at each fork.
+2. **Procedure** — numbered/checklist steps, with a clear default at each choice.
 3. A short worked example (input → command → output) when it helps.
 4. **Gotchas** — see below; often the highest-value part.
 
