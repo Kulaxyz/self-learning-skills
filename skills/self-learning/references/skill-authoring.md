@@ -134,6 +134,10 @@ pasting a value, replace it with its source.
 - [ ] `description` is non-empty, ≤1024 chars, and states what + when.
 - [ ] Body is a generalized **procedure**, not a one-off answer.
 - [ ] No secret values anywhere in the skill — only pointers to them.
+- [ ] **Secret audit passed.** Every literal value in the file passes the
+      pre-write self-audit (Bearer/Basic/`sk-`/`ghp_`/etc. patterns stripped,
+      connection strings have credentials removed, no user-pasted values
+      re-typed verbatim). If any line fails, redact before committing.
 - [ ] `SKILL.md` is under ~500 lines; long material is in `references/`/`assets/`.
 - [ ] Relative file references are correct and one level deep.
 

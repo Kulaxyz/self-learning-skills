@@ -172,6 +172,21 @@ yourself inline:
 - **Secrets never go in a skill file.** Skills get committed and open-sourced.
   Point to *where* the secret lives; never reproduce the value. This is the
   single most important rule in this skill.
+- **Run this 10-second self-audit the moment before you call `write_file`** —
+  paste the proposed body through this filter in your head:
+  - Does any line contain a literal `Bearer `, `Basic `, `sk-`, `ghp_`,
+    `xox[bpars]-`, `AKIA`, or a 32+ char base64/hex blob? → redact it.
+  - Is there a connection string (`postgres://`, `mysql://`, `mongodb://`,
+    `redis://`, `https://user:pass@`, `amqp://`, `kafka://`)? → strip
+    credentials, keep scheme + host + path.
+  - Did the user *paste* a value earlier in the conversation that you're now
+    re-typing? → replace with the source pointer (`env:FOO_TOKEN`,
+    `~/.aws/credentials`, MCP tool `secrets/get`, etc.).
+  - Is the value a *placeholder* (`YOUR_TOKEN_HERE`, `<api-key>`,
+    `${TO_FILL}`) that will be filled by a hook? → still redact; placeholders
+    that get auto-filled leak the same way literals do.
+  - Is this an *example URL* in a docs snippet? → use `example.com`,
+    `user:pass@example.com`, or a documented test fixture.
 - **`name` must equal the directory name**, and be lowercase `a-z`/`0-9`/hyphens
   only — no leading, trailing, or doubled hyphens. A mismatch means the skill
   won't load.
